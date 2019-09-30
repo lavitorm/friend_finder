@@ -2,24 +2,24 @@ CREATE DATABASE friend_finder_db;
 USE friend_finder_db;
 
 CREATE TABLE questions (
-  id INT NOT NULL AUTO_INCREMENT,
-  question INT NOT NULL,
-  PRIMARY KEY (id)
+  question_id INT NOT NULL AUTO_INCREMENT,
+  question VARCHAR(255),
+  PRIMARY KEY (question_id)
 );
 
 CREATE TABLE friends (
-    id INT NOT NULL AUTO_INCREMENT,
-    friend_name INT NOT NULL,
-    picture_link INT NOT NULL,
-    PRIMARY KEY(id),
+    friend_id INT NOT NULL AUTO_INCREMENT,
+    friend_name VARCHAR(255),
+    picture_link VARCHAR(255),
+    PRIMARY KEY(friend_id),
 );
 
 CREATE TABLE scores (
-    id INT NOT NULL AUTO_INCREMENT,
-    question_id INT NOT NULL,
     friend_id INT NOT NULL,
+    question_id INT NOT NULL,
     score INT NOT NULL,
-    PRIMARY KEY(id),
+    FOREIGN KEY (friend_id) REFERENCES friends(friend_id),
+    FOREIGN KEY (question_id) REFERENCES questions(question_id)
 );
 
 INSERT INTO questions (question) 
@@ -34,3 +34,4 @@ VALUES
 ('You enjoy travelling, going out and meeting people in different places.'),
 ('Best thing in life is to just sit at home, eat and watch TV.'),
 ('Saving is money is for wimps. You find the most fun shopping and spending every single buck.')
+
