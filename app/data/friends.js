@@ -1,4 +1,4 @@
-var friendsArray = [
+var friends = [
 	{
 	  name: "Brad",
 	  photo: "https://www.etonline.com/sites/default/files/styles/max_970x546/public/images/2019-09/gettyimages-1175609064.jpg?itok=VJz1jPYn&h=bd90f99b",
@@ -18,4 +18,4 @@ var friendsArray = [
 	},
 ];
 
-module.exports = friendsList;
+module.exports = friends;

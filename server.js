@@ -1,24 +1,23 @@
-// required dependencies
-var express = require ("express");
+/* required dependencies */
+var express = require("express");
 var bodyParser = require("body-parser");
-var path = require ("path");
+var path = require("path");
 var app = express();
 
-// static folder
-//app.use(express.static(path.join(__dirname, 'public')));
-
-// create application/json parser
+/* create application/json parser */
 app.use(bodyParser.json());
 
-// parse application/x-www-form-urlencoded
+/* parse application/x-www-form-urlencoded */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
-app.use(bodyParser.json({ type: "application/vnd.api + json"}));
+app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
-//api routes
-require(path.join(__dirname, "./app/routing/api-routes.js"))(app);
-require(path.join(__dirname, "./app/routing/html-routes.js"))(app);
+/* static folder */
+app.use(express.static("app/public"));
+
+/* api routes */
+require("./app/routing/api-route.js/index.js")(app);
+require("./app/routing/html-route.js/index.js")(app);
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
-

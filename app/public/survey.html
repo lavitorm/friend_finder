@@ -195,14 +195,13 @@
                     <h2 class="modal-title"><strong>Best Match</strong></h2>
                 </div>
                 <div class="modal-body">
-                    <h2 id="match-name"></h2>
+                    <h2 id="matchName"></h2>
                     <img id="matchImg" src="https://via.placeholder.com/400x400" alt="user photo">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -219,7 +218,7 @@
                 });
                 return isValid;
             }
-            if (validateForm()) {
+            if (validateForm() === true) {
                 var userData = {
                     name: $("#name").val(),
                     photo: $("#photo").val(),
