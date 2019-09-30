@@ -1,5 +1,5 @@
 /* required dependencies */
-var friends = require('../data/friends.js');
+var friends = require("../data/friends.js");
 
 /* module exports/routes */
 module.exports = (app) => {

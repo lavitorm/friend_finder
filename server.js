@@ -16,8 +16,8 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 app.use(express.static("app/public"));
 
 /* api routes */
-require("./app/routing/api-route.js/index.js")(app);
-require("./app/routing/html-route.js/index.js")(app);
+require("./app/routing/api-route.js")(app);
+require("./app/routing/html-route.js")(app);
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
