@@ -21,7 +21,6 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 /* static folder */
 app.use(express.static('app/public'));
 
-
 /* server routing for api and html */ 
 apiRoutes(app); 
 htmlRoutes(app);

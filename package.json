@@ -11,13 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "modal": "^1.2.0",
-    "modules": "^0.4.0",
-    "mysql": "^2.17.1",
-    "path": "^0.12.7",
-    "require": "^2.4.20"
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "inquire": "0.4.8",
+    "modal": "1.2.0",
+    "modules": "0.4.0",
+    "mysql": "2.17.1",
+    "path": "0.12.7",
+    "require": "2.4.20"
   },
   "devDependencies": {}
 }
