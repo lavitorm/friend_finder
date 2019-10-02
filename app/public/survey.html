@@ -61,18 +61,19 @@
         </h4>
         <br>
         <h6><strong>Your name</strong></h6>
-        <input type="text" id="name" placeholder="Please provide your first and last name" class="form-control"
+        <input type="text" id="formName" placeholder="Please provide your first and last name" class="form-control"
             required>
         <br>
         <h6><strong>A link to your picture</strong></h6>
-        <input type="text" id="photo" placeholder="Please provide a link to an updated picture of yourself"
+        <input type="text" id="formImage" placeholder="Please provide a link to an updated picture of yourself"
             class="form-control" required>
         <br>
         <h5><strong>Choose from the rating scale menu options below to indicate how do you feel about each
                 statement.</strong></h5>
         <br>
+        <!-- Questions of survey -->
         <p><strong>1. You love sports.</strong></p>
-        <select class="chosen-select" id="q1" name="select">
+        <select class="chosen-select" id="1" name="select">
             <option label="Choose"></option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -173,30 +174,30 @@
         </select>
         <br><br>
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit"><i class="fa fa-check-circle"
-                aria-hidden="true"></i>Submit your best matching choices</button>
+        <button type="submit" class="btn btn-lg btn-dark btn-block" id="submitButton">Submit your best matching choices</button>
 
         <hr>
         <footer class="footer text-center">
             <div class="container">
-                <p><a href="https://github.com/lavitorm/friend_finder">GitHub Repo</a></p>
+                <p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/lavitorm/friend_finder" target="_blank">GitHub Repo</a></p>
             </div>
         </footer>
 
     </div>
 
-    <!-- Modal -->
-    <div id="results-modal" class="modal fade" role="dialog">
+    <!-- match modal -->
+    <div id="resultsModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-            <!-- Modal content-->
+            <!-- modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h2 class="modal-title"><strong>Best Match</strong></h2>
+                    <h2 class="modal-title"><strong>Your best match!</strong></h2>
                 </div>
                 <div class="modal-body">
                     <h2 id="matchName"></h2>
-                    <img id="matchImg" src="https://via.placeholder.com/400x400" alt="user photo">
+                    <img id="matchImg" src="https://via.placeholder.com/400x400" alt="no photo available"
+                        style="max-width: 400px;">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -207,45 +208,83 @@
 
     <!-- JavaScript -->
     <script type="text/javascript">
-        $("#submit").on("click", () => {
-            function validateForm() {
-                var isValid = true;
-                $(".form-control").each(function () {
-                    if ($(this).val() === "") isValid = false;
-                });
-                $(".chosen-select").each(function () {
-                    if ($(this).val() === "") isValid = false;
-                });
-                return isValid;
-            }
-            if (validateForm() === true) {
-                var userData = {
-                    name: $("#name").val(),
-                    photo: $("#photo").val(),
-                    scores: [
-                        $("#q1").val(),
-                        $("#q2").val(),
-                        $("#q3").val(),
-                        $("#q4").val(),
-                        $("#q5").val(),
-                        $("#q6").val(),
-                        $("#q7").val(),
-                        $("#q8").val(),
-                        $("#q9").val(),
-                        $("#q10").val()
-                    ]
-                };
-                var currentURL = window.location.origin;
 
-                $.post(currentURL + "/api/friends", userData, (data) => {
-                    $("#matchName").text(data.name);
-                    $("#matchImg").attr("src", data.photo);
-                    $("#resultsModal").modal("toggle");
+        var allFieldsCompleted;
+        $(document).ready(function () {
+            /* submission */
+            $('#submitButton').on('click', function () {
+
+                /* if all the user fields are completed... */
+                checkIfComplete(function () {
+                    /* ...proceed with AJAX call with all questions answered */
+                    if (allFieldsCompleted) {
+                        collectInputs();
+                    }
+                    else {
+                        alert('Please complete all fields before submitting.');
+                    }
                 });
-            } else {
-                alert("Please fill out all fields before submitting!");
-            }
-        });
+            });
+        }); 
+        /* validation of user input */
+        function checkIfComplete(callback) {
+            /* check through all the questions (class "chosen-select") */
+            var questionsCompleted;
+            $('.chosen-select').each(function () {
+                if ($(this).val() == "") {
+                    questionsCompleted = false;
+                }
+            })
+                /* async behavior of $.each() */
+                .promise().done(function () {
+                    /* checks for incomplete questions */
+                    if (questionsCompleted == false) {
+                        allFieldsCompleted = false;
+                    }
+                    /* checks if a name is entered */
+                    else if ($('#formName').val().trim() == "") {
+                        allFieldsCompleted = false;
+                    }
+                    /* checks if an image link is entered */
+                    else if ($('#formImage').val().trim() == "") {
+                        allFieldsCompleted = false;
+                    }
+                    /* fields are completed */ 
+                    else {
+                        allFieldsCompleted = true;
+                    }
+                    /* fires off callback (async behavior of $.each) */
+                    callback();
+                });
+        }
+        function collectInputs() {
+            /* makes new friend object */
+            var newFriend = {
+                name: $('#formName').val().trim(),
+                photo: $('#formImage').val().trim(),
+                scores: []
+            };
+            /* loops through questions to get scores and push'em to array */
+            var scoresArray = [];
+            $('.chosen-select').each(function () {
+                scoresArray.push(parseInt($(this).val()));
+            })
+                /* async behavior of $.each() */
+                .promise().done(function () {
+
+                    /* push the array of scores to the new friend object */
+                    newFriend.scores = scoresArray;
+                    /* POST the newFriend to the friends.js file and get back the best match */
+                    var currentURL = window.location.origin;
+                    $.post(currentURL + "/api/friends", newFriend, function (data) {
+                        /* Add Best Match attributes to Modal */
+                        $('#matchName').text(data.name);
+                        $('#matchImg').attr('src', data.photo);
+                        /* Show the modal with the best match */ 
+                        $("#resultsModal").modal('toggle');
+                    });
+                });
+        }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
